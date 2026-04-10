@@ -15,7 +15,7 @@
     b.col_b2
   FROM
     table_a AS a
-    LEFT JOIN table_b AS b ON b.col_a1 = a.col_a1 AND b.cond1 = %s AND b.cond2 = %s
+    LEFT JOIN table_b AS b ON b.col_a1 = a.col_a1 AND b.cond1 = %s AND b.cond2 = %s AND b.rangecond IN ('a', 'b')
   WHERE
     a.col_a1 = (SELECT * FROM loop_values LIMIT 1)
   UNION ALL
@@ -28,7 +28,7 @@
   FROM
     all_entries
     LEFT JOIN table_a AS a ON a.col_a1 = (SELECT col_a1 FROM loop_values WHERE col_a1 > all_entries.col_a1 LIMIT 1)
-    LEFT JOIN table_b AS b ON b.col_a1 = a.col_a1 AND b.cond1 = %s AND b.cond2 = %s
+    LEFT JOIN table_b AS b ON b.col_a1 = a.col_a1 AND b.cond1 = %s AND b.cond2 = %s AND b.rangecond IN ('a', 'b')
   WHERE
     n + 1 < (SELECT COUNT(*) FROM loop_values)
 )
@@ -59,7 +59,7 @@ UNION ALL
     b.col_b2
   FROM
     table_a AS a
-    LEFT JOIN table_b AS b ON b.col_a1 = a.col_a1 AND b.cond3 = %s AND b.cond4 = %s
+    LEFT JOIN table_b AS b ON b.col_a1 = a.col_a1 AND b.cond3 = %s AND b.cond4 = %s AND b.rangecond IN ('a', 'b')
   WHERE
     a.col_a1 = (SELECT * FROM loop_values LIMIT 1)
   UNION ALL
@@ -72,7 +72,7 @@ UNION ALL
   FROM
     all_entries
     LEFT JOIN table_a AS a ON a.col_a1 = (SELECT col_a1 FROM loop_values WHERE col_a1 > all_entries.col_a1 LIMIT 1)
-    LEFT JOIN table_b AS b ON b.col_a1 = a.col_a1 AND b.cond3 = %s AND b.cond4 = %s
+    LEFT JOIN table_b AS b ON b.col_a1 = a.col_a1 AND b.cond3 = %s AND b.cond4 = %s AND b.rangecond IN ('a', 'b')
   WHERE
     n + 1 < (SELECT COUNT(*) FROM loop_values)
 )
