@@ -18,6 +18,7 @@ class CombinedResultTests(CompilerTestCase):
                 ON b.col_a1 = a.col_a1
                 AND b.cond1 = %s
                 AND b.cond2 = %s
+                AND b.rangecond IN ('a', 'b')
                 WHERE a.col_a1 = $id
             }
             UNION ALL
@@ -29,6 +30,7 @@ class CombinedResultTests(CompilerTestCase):
                 ON b.col_a1 = a.col_a1
                 AND b.cond3 = %s
                 AND b.cond4 = %s
+                AND b.rangecond IN ('a', 'b')
                 WHERE a.col_a1 = $id
             }
             """,

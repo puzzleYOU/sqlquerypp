@@ -20,6 +20,7 @@ pub struct ParserState<'t> {
     statement: &'t String,
     seen_token_state: Option<TokenState>,
     combined_result_nodes_state: NodesState<CombinedResultNode>,
+    visiting_inner_query: bool,
     offset: usize,
 }
 
@@ -34,6 +35,7 @@ impl<'t> ParserState<'t> {
         Self { statement,
                seen_token_state: None,
                combined_result_nodes_state: NodesState::new(),
+               visiting_inner_query: false,
                offset: 0 }
     }
 
@@ -180,7 +182,8 @@ impl<'t> ParserState<'t> {
             },
 
             (_, TokenState::OpeningParenthese(offset))
-                if handles_combined_result_node =>
+                if handles_combined_result_node
+                   && !self.visiting_inner_query =>
             {
                 self.attach_iteration_query(*offset + 1)?
             },
@@ -194,12 +197,14 @@ impl<'t> ParserState<'t> {
             (_, TokenState::OpeningBrace(offset))
                 if handles_combined_result_node =>
             {
+                self.visiting_inner_query = true;
                 self.mark_inner_query_begin(*offset)?
             },
 
             (_, TokenState::ClosingBrace(offset))
                 if handles_combined_result_node =>
             {
+                self.visiting_inner_query = false;
                 self.finalize_combined_result_node(offset)
             },
 
